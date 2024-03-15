@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+    - main
+jobs:
+  deploy:
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::255704215077:role/gh-actions-oidc #change to reflect your IAM role’s ARN
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ap-southeast-1
+      - run: aws s3 cp index.html s3://my-cloud-resume-challenge2024/ --recursive \
+  
